@@ -2,13 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_refresh"
-        android:icon="@android:drawable/ic_menu_rotate"
-        app:showAsAction="ifRoom"
-        android:title="@string/action_refresh"/>
-    <item
         android:id="@+id/action_sort"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
-        app:showAsAction="ifRoom"
-        android:title="@string/action_sort"/>
+        android:orderInCategory="0"
+        android:title="@string/action_sort_popular"/>
 </menu>

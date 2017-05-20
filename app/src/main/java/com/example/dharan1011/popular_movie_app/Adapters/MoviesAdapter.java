@@ -23,12 +23,13 @@ import java.util.List;
  * Created by dharan1011 on 19/5/17.
  */
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemViewHolder>{
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemViewHolder> {
     private final static String TAG = MoviesAdapter.class.getSimpleName();
 
-    public interface ItemClickHandler{
+    public interface ItemClickHandler {
         void onItemClick(Movie movie);
     }
+
     private List<Movie> mMovieList;
     private ItemClickHandler itemClickHandler;
 
@@ -40,7 +41,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemV
 
     @Override
     public MovieItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_item,parent,false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_item, parent, false);
         return new MovieItemViewHolder(v);
     }
 
@@ -63,18 +64,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemV
         notifyDataSetChanged();
     }
 
-    public class MovieItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class MovieItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView movieItemImageView;
+
         public MovieItemViewHolder(View itemView) {
             super(itemView);
             movieItemImageView = (ImageView) itemView.findViewById(R.id.imv_movie_item);
             itemView.setOnClickListener(this);
         }
 
-        public void bind(Movie movie){
+        public void bind(Movie movie) {
             //TODO Inefficient Implementation
             Picasso.with(itemView.getContext())
-                    .load(APIService.IMAGE_URL+movie.getPoster_path())
+                    .load(APIService.IMAGE_URL + movie.getPoster_path())
                     .into(movieItemImageView);
         }
 

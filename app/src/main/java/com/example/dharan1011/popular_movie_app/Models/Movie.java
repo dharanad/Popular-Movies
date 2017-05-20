@@ -35,6 +35,7 @@ public class Movie {
     @SerializedName("vote_average")
     private String vote_average;
 
+
     public String getPoster_path() {
         return poster_path;
     }
