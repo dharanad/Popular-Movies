@@ -1,6 +1,7 @@
 package com.example.dharan1011.popular_movie_app.Models;
 
 
+import com.example.dharan1011.popular_movie_app.Utils.APIService;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -37,7 +38,8 @@ public class Movie {
 
 
     public String getPoster_path() {
-        return poster_path;
+
+        return APIService.IMAGE_URL+poster_path;
     }
 
     public boolean isAdult() {

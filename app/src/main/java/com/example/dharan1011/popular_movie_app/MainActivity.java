@@ -1,5 +1,6 @@
 package com.example.dharan1011.popular_movie_app;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
 
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
-    Toast mToast;
+//    Toast mToast;
     private MoviesAdapter mMoviesAdapter;
     private List<Movie> mMovieList;
     private String sortType;
@@ -48,13 +49,14 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mProgressBar = (ProgressBar) findViewById(R.id.pb_loading);
-        mRecyclerView = (RecyclerView) findViewById(R.id.rcv_movie_list);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.rcv_movie_list);
         mRecyclerView.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mMoviesAdapter = new MoviesAdapter(MainActivity.this);
         mRecyclerView.setAdapter(mMoviesAdapter);
+
         sortType = getSharedPreferences(SHARED_PREFERENCE_KEY, 0).getString(SORT_KEY, POPULAR);
     }
 
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
                 .build();
 
         APIService service = retrofit.create(APIService.class);
-        Call<Data> call = service.getMovies(sortType, APIService.API_KEY);
+        Call<Data> call = service.getMoviesList(sortType, APIService.API_KEY);
         call.enqueue(new Callback<Data>() {
             @Override
             public void onResponse(@NonNull Call<Data> call, @NonNull Response<Data> response) {
@@ -105,9 +107,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
 
     @Override
     public void onItemClick(Movie movie) {
-        if(mToast != null) mToast.cancel();
-        mToast = Toast.makeText(MainActivity.this,movie.getTitle()+" "+movie.getRelease_date(),Toast.LENGTH_LONG);
-        mToast.show();
+
+        Intent i = new Intent(MainActivity.this,DetailsActivity.class);
+        i.putExtra(Intent.EXTRA_TEXT,movie.getId());
+        startActivity(i);
     }
 
     @Override

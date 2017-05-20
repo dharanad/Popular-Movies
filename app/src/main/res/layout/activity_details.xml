@@ -6,4 +6,14 @@
     android:layout_height="match_parent"
     tools:context="com.example.dharan1011.popular_movie_app.DetailsActivity">
 
+    <TextView
+        android:id="@+id/tv_movie_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:fontFamily="sans-serif"
+        android:textAlignment="center"/>
+
+
+
 </LinearLayout>

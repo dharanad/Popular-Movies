@@ -5,6 +5,7 @@ package com.example.dharan1011.popular_movie_app.Utils;
  */
 
 import com.example.dharan1011.popular_movie_app.Models.Data;
+import com.example.dharan1011.popular_movie_app.Models.MovieInfo;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -22,5 +23,7 @@ public interface APIService {
     String IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
     @GET("movie/{sort}")
-    Call<Data> getMovies(@Path("sort") String sort, @Query("api_key") String apiKey);
+    Call<Data> getMoviesList(@Path("sort") String sort, @Query("api_key") String apiKey);
+    @GET("movie/{movie_id}")
+    Call<MovieInfo> getMovieInfo(@Path("movie_id") String movieId,@Query("api_key") String apiKey);
 }
