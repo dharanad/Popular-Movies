@@ -56,7 +56,7 @@ public class Movie implements Serializable{
     }
 
     public String getRelease_date() {
-        return release_date;
+        return "Release Date : "+release_date;
     }
 
     public String getId() {

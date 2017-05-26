@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso;
 
 public class DetailsActivity extends AppCompatActivity {
     private static final String TAG = DetailsActivity.class.getSimpleName();
-    TextView movieTitleTextView,movieRatingTextView,movieOverviewTextView;
+    TextView movieTitleTextView,movieRatingTextView,movieOverviewTextView,movieReleaseDataTextView;
     ImageView movieThumbnailImageView;
     private Movie movieData;
     @Override
@@ -20,7 +20,6 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
 
         setupUi();
-
         if(getIntent().hasExtra(MainActivity.EXTRA_OBJECT)){
             movieData = (Movie) getIntent().getSerializableExtra(MainActivity.EXTRA_OBJECT);
         }
@@ -36,7 +35,7 @@ public class DetailsActivity extends AppCompatActivity {
         movieTitleTextView.setText(movieInfo.getOriginal_title());
         movieRatingTextView.setText(movieInfo.getVote_average());
         movieOverviewTextView.setText(movieInfo.getOverview());
-        Log.d(TAG, "updateUi: "+movieInfo.getPoster_path());
+        movieReleaseDataTextView.setText(movieInfo.getRelease_date());
         Picasso.with(this).load(movieInfo.getPoster_path()).into(movieThumbnailImageView);
     }
     private void setupUi() {
@@ -44,5 +43,6 @@ public class DetailsActivity extends AppCompatActivity {
         movieRatingTextView = (TextView) findViewById(R.id.tv_movie_rating);
         movieOverviewTextView = (TextView) findViewById(R.id.tv_movie_overview);
         movieThumbnailImageView = (ImageView) findViewById(R.id.imv_movie_thumbnail);
+        movieReleaseDataTextView = (TextView) findViewById(R.id.tv_movie_release_date);
     }
 }
