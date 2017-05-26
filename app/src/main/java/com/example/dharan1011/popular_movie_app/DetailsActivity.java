@@ -2,7 +2,6 @@ package com.example.dharan1011.popular_movie_app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,12 +30,14 @@ public class DetailsActivity extends AppCompatActivity {
         updateUi(movieData);
     }
 
-    private void updateUi(Movie movieInfo){
+    private void updateUi(Movie movieInfo) {
         movieTitleTextView.setText(movieInfo.getOriginal_title());
         movieRatingTextView.setText(movieInfo.getVote_average());
         movieOverviewTextView.setText(movieInfo.getOverview());
         movieReleaseDataTextView.setText(movieInfo.getRelease_date());
-        Picasso.with(this).load(movieInfo.getPoster_path()).into(movieThumbnailImageView);
+        Picasso.with(this)
+                .load(movieInfo.getPoster_path())
+                .into(movieThumbnailImageView);
     }
     private void setupUi() {
         movieTitleTextView = (TextView) findViewById(R.id.tv_movie_title);

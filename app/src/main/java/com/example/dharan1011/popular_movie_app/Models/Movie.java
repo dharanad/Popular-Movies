@@ -92,7 +92,7 @@ public class Movie implements Serializable{
     }
 
     public String getVote_average() {
-        return vote_average+"/10";
+        return "Rating : "+vote_average+"/10";
     }
 
     @Override

@@ -11,7 +11,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-
 /**
  * Created by dharan1011 on 19/5/17.
  */
@@ -22,6 +21,6 @@ public interface APIService {
     String IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
     @GET("movie/{sort}")
-    Call<Data> getMoviesList(@Path("sort") String sort, @Query("api_key") String apiKey);
+    Call<Data> getMoviesData(@Path("sort") String sort, @Query("api_key") String apiKey);
 
 }

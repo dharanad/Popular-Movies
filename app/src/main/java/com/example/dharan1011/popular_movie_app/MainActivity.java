@@ -2,11 +2,11 @@ package com.example.dharan1011.popular_movie_app;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
 
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
-//    Toast mToast;
     private MoviesAdapter mMoviesAdapter;
     private List<Movie> mMovieList;
     private String sortType;
@@ -53,8 +52,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rcv_movie_list);
         mRecyclerView.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
+
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this,(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)?2:4));
+
         mMoviesAdapter = new MoviesAdapter(MainActivity.this);
         mRecyclerView.setAdapter(mMoviesAdapter);
 
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
                 .build();
 
         APIService service = retrofit.create(APIService.class);
-        Call<Data> call = service.getMoviesList(sortType, APIService.API_KEY);
+        Call<Data> call = service.getMoviesData(sortType, APIService.API_KEY);
         call.enqueue(new Callback<Data>() {
             @Override
             public void onResponse(@NonNull Call<Data> call, @NonNull Response<Data> response) {
@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
 
             @Override
             public void onFailure(@NonNull Call<Data> call, @NonNull Throwable t) {
-                Log.d(TAG, "onFailure: Call Failed");
                 Toast.makeText(MainActivity.this, "Couldn't Fetch Content", Toast.LENGTH_SHORT).show();
                 hideProgressBar();
             }
@@ -130,10 +129,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         switch (item.getItemId()) {
             case R.id.action_sort:
                 if(sortType.equals(TOP_RATED)){
-                sortType = POPULAR;
-                fetchContent(sortType);
-                mMoviesAdapter.notifyDataSetChanged();
-                item.setTitle(getResources().getString(R.string.action_sort_top_rated));
+                    sortType = POPULAR;
+                    fetchContent(sortType);
+                    mMoviesAdapter.notifyDataSetChanged();
+                    item.setTitle(getResources().getString(R.string.action_sort_top_rated));
                 }
                 else{
                     sortType = TOP_RATED;
@@ -143,15 +142,20 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
                 }
                 return true;
         }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateSortKey() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCE_KEY, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SORT_KEY, sortType);
+        editor.apply();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCE_KEY, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(SORT_KEY, sortType);
-        editor.apply();
+
     }
 }

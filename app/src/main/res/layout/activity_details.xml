@@ -1,91 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:layout_height="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-<android.support.constraint.ConstraintLayout
+    android:layout_height="match_parent">
 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.dharan1011.popular_movie_app.DetailsActivity">
-
-    <TextView
-        android:id="@+id/tv_movie_title"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical"
+        tools:context="com.example.dharan1011.popular_movie_app.DetailsActivity">
 
-    <ImageView
-        android:id="@+id/imv_movie_thumbnail"
-        android:layout_width="123dp"
-        android:layout_height="166dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="37dp"
-        android:contentDescription="@string/movie_thumbnail"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_movie_title" />
+        <TextView
+            android:id="@+id/tv_movie_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-    <TextView
-        android:id="@+id/tv_movie_rating"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
-        android:layout_marginTop="98dp"
-        app:layout_constraintLeft_toRightOf="@+id/textView2"
-        android:layout_marginLeft="2dp"
-        app:layout_constraintHorizontal_bias="0.503"
-        android:layout_marginStart="2dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/movie_overview_label"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imv_movie_thumbnail" />
+            <ImageView
+                android:id="@+id/imv_movie_thumbnail"
+                android:layout_width="123dp"
+                android:layout_height="166dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/movie_thumbnail" />
 
-    <TextView
-        android:id="@+id/tv_movie_overview"
-        android:layout_width="395dp"
-        android:layout_height="wrap_content"
-        android:textSize="22dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintLeft_toLeftOf="@id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="1.0" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="98dp"
-        android:text="@string/movie_rating_label"
-        app:layout_constraintLeft_toRightOf="@+id/imv_movie_thumbnail"
-        app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
-        android:layout_marginStart="80dp" />
-    <TextView
-        android:id="@+id/tv_movie_release_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"/>
+                <TextView
+                    android:id="@+id/tv_movie_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold" />
 
-</android.support.constraint.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tv_movie_release_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_movie_overview_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/movie_overview_label"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_movie_overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:textSize="18sp" />
+    </LinearLayout>
 </ScrollView>

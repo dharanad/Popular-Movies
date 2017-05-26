@@ -12,7 +12,6 @@ import android.widget.ImageView;
 
 import com.example.dharan1011.popular_movie_app.Models.Movie;
 import com.example.dharan1011.popular_movie_app.R;
-import com.example.dharan1011.popular_movie_app.Utils.APIService;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemV
         return mMovieList.size();
     }
 
-    public List<Movie> getMovieList() {
+    private List<Movie> getMovieList() {
         return mMovieList;
     }
 
@@ -73,9 +72,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemV
             itemView.setOnClickListener(this);
         }
 
-        public void bind(Movie movie) {
+        void bind(Movie movie) {
             Picasso.with(itemView.getContext())
                     .load(movie.getPoster_path())
+                    .placeholder(R.drawable.ic_place_holder)
                     .into(movieItemImageView);
         }
 
