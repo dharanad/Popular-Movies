@@ -2,4 +2,7 @@
     <string name="app_name">Popular-Movie-App</string>
     <string name="action_sort_top_rated">Sort by : Top Rated</string>
     <string name="action_sort_popular">Sort by : Popularity</string>
+    <string name="movie_thumbnail">Movie Thumbnail</string>
+    <string name="movie_overview_label">Movie Overview</string>
+    <string name="movie_rating_label">Rating :</string>
 </resources>

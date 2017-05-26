@@ -1,66 +1,48 @@
 package com.example.dharan1011.popular_movie_app;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.dharan1011.popular_movie_app.Models.MovieInfo;
-import com.example.dharan1011.popular_movie_app.Utils.APIService;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import com.example.dharan1011.popular_movie_app.Models.Movie;
+import com.squareup.picasso.Picasso;
 
 public class DetailsActivity extends AppCompatActivity {
     private static final String TAG = DetailsActivity.class.getSimpleName();
-    TextView mMovieTitleTextView;
-    private String movieId;
+    TextView movieTitleTextView,movieRatingTextView,movieOverviewTextView;
+    ImageView movieThumbnailImageView;
+    private Movie movieData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        mMovieTitleTextView = (TextView) findViewById(R.id.tv_movie_title);
+        setupUi();
 
-        if(getIntent().hasExtra(Intent.EXTRA_TEXT)){
-            movieId = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+        if(getIntent().hasExtra(MainActivity.EXTRA_OBJECT)){
+            movieData = (Movie) getIntent().getSerializableExtra(MainActivity.EXTRA_OBJECT);
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        fetchMovieInfo(movieId);
+        updateUi(movieData);
     }
 
-    private void fetchMovieInfo(String movieId){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIService.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        APIService service = retrofit.create(APIService.class);
-        Call<MovieInfo> call = service.getMovieInfo(movieId,APIService.API_KEY);
-        call.enqueue(new Callback<MovieInfo>() {
-            @Override
-            public void onResponse(@NonNull Call<MovieInfo> call, @NonNull Response<MovieInfo> response) {
-                if(response.isSuccessful()){
-                    updateUi(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<MovieInfo> call, @NonNull Throwable t) {
-
-            }
-        });
+    private void updateUi(Movie movieInfo){
+        movieTitleTextView.setText(movieInfo.getOriginal_title());
+        movieRatingTextView.setText(movieInfo.getVote_average());
+        movieOverviewTextView.setText(movieInfo.getOverview());
+        Log.d(TAG, "updateUi: "+movieInfo.getPoster_path());
+        Picasso.with(this).load(movieInfo.getPoster_path()).into(movieThumbnailImageView);
     }
-
-    private void updateUi(MovieInfo movieInfo){
-        mMovieTitleTextView.setText(movieInfo.getOriginal_title());
+    private void setupUi() {
+        movieTitleTextView = (TextView) findViewById(R.id.tv_movie_title);
+        movieRatingTextView = (TextView) findViewById(R.id.tv_movie_rating);
+        movieOverviewTextView = (TextView) findViewById(R.id.tv_movie_overview);
+        movieThumbnailImageView = (ImageView) findViewById(R.id.imv_movie_thumbnail);
     }
 }

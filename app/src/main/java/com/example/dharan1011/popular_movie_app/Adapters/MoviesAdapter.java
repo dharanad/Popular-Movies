@@ -74,7 +74,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemV
         }
 
         public void bind(Movie movie) {
-            //TODO Inefficient Implementation
             Picasso.with(itemView.getContext())
                     .load(movie.getPoster_path())
                     .into(movieItemImageView);

@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
     private List<Movie> mMovieList;
     private String sortType;
 
+    public static final String EXTRA_OBJECT = "movie-object";
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String SORT_KEY = "sort_key";
     private static final String SHARED_PREFERENCE_KEY = "shared_preference_key";
@@ -58,12 +59,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         mRecyclerView.setAdapter(mMoviesAdapter);
 
         sortType = getSharedPreferences(SHARED_PREFERENCE_KEY, 0).getString(SORT_KEY, POPULAR);
+
+        fetchContent(sortType);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        fetchContent(sortType);
     }
 
     public void showProgressBar() {
@@ -98,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
             @Override
             public void onFailure(@NonNull Call<Data> call, @NonNull Throwable t) {
                 Log.d(TAG, "onFailure: Call Failed");
-                //TODO handle Failure
                 Toast.makeText(MainActivity.this, "Couldn't Fetch Content", Toast.LENGTH_SHORT).show();
                 hideProgressBar();
             }
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
     public void onItemClick(Movie movie) {
 
         Intent i = new Intent(MainActivity.this,DetailsActivity.class);
-        i.putExtra(Intent.EXTRA_TEXT,movie.getId());
+        i.putExtra(EXTRA_OBJECT,movie);
         startActivity(i);
     }
 

@@ -1,14 +1,19 @@
 package com.example.dharan1011.popular_movie_app.Models;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.dharan1011.popular_movie_app.Utils.APIService;
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * Created by dharan1011 on 19/5/17.
  */
 
-public class Movie {
+public class Movie implements Serializable{
     @SerializedName("poster_path")
     private String poster_path;
     @SerializedName("adult")
@@ -87,7 +92,7 @@ public class Movie {
     }
 
     public String getVote_average() {
-        return vote_average;
+        return vote_average+"/10";
     }
 
     @Override
@@ -108,4 +113,5 @@ public class Movie {
                 ", vote_average='" + vote_average + '\'' +
                 '}';
     }
+
 }
