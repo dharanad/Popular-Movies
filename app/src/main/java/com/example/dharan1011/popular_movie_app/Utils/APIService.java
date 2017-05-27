@@ -5,6 +5,7 @@ package com.example.dharan1011.popular_movie_app.Utils;
  */
 
 import com.example.dharan1011.popular_movie_app.Models.Data;
+import com.example.dharan1011.popular_movie_app.Models.Movie;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -23,4 +24,9 @@ public interface APIService {
     @GET("movie/{sort}")
     Call<Data> getMoviesData(@Path("sort") String sort, @Query("api_key") String apiKey);
 
+    @GET("movie/{id}/reviews")
+    Call<Movie> getMovieReviews(@Path("id") String movieId,@Query("api_key") String apiKey);
+
+    @GET("movie/{id}/videos")
+    Call<Movie> getMovieVideos(@Path("id") String movieId,@Query("api_key") String apiKey);
 }

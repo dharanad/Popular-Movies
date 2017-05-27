@@ -5,4 +5,7 @@
         android:id="@+id/action_sort"
         android:orderInCategory="0"
         android:title="@string/action_sort_popular"/>
+    <item android:id="@+id/action_favourite_movies"
+        android:title="@string/action_favourite_movies"
+        android:orderInCategory="1"/>
 </menu>

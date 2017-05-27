@@ -1,9 +1,12 @@
 package com.example.dharan1011.popular_movie_app;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,10 +19,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.dharan1011.popular_movie_app.Adapters.MoviesAdapter;
+import com.example.dharan1011.popular_movie_app.Data.MovieContract;
 import com.example.dharan1011.popular_movie_app.Models.Data;
 import com.example.dharan1011.popular_movie_app.Models.Movie;
 import com.example.dharan1011.popular_movie_app.Utils.APIService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -60,12 +65,21 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
 
         sortType = getSharedPreferences(SHARED_PREFERENCE_KEY, 0).getString(SORT_KEY, POPULAR);
 
-        fetchContent(sortType);
+        //TODO
+//        if(savedInstanceState == null) {
+//            int rowsDeleted = getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, null, null);
+//            if (rowsDeleted > 0)
+//                Toast.makeText(this, "Database Emptied", Toast.LENGTH_SHORT).show();
+//
+//            fetchContent(sortType);
+//        }
+        if(null == savedInstanceState) fetchContent(sortType);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+//        fetchContent(sortType);
     }
 
     public void showProgressBar() {
@@ -92,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
             public void onResponse(@NonNull Call<Data> call, @NonNull Response<Data> response) {
                 if (response.isSuccessful()) {
                     mMovieList = response.body().getMovieList();
+                    if(mMovieList == null || mMovieList.size() == 0) return;
+//                    insertIntoDatabase(mMovieList);
                     mMoviesAdapter.setmMovieList(mMovieList);
                     hideProgressBar();
                 }
@@ -103,6 +119,21 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
                 hideProgressBar();
             }
         });
+    }
+
+    //TODO
+    private void insertIntoDatabase(List<Movie> mMovieList) {
+        List<ContentValues> contentValues = new ArrayList<>();
+        for(Movie m : mMovieList){
+            ContentValues v = new ContentValues();
+            v.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID,m.getId());
+            v.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE,m.getTitle());
+            contentValues.add(v);
+        }
+        //TODO
+        int rowsInserted = getContentResolver().bulkInsert(MovieContract.MovieEntry.CONTENT_URI,contentValues.toArray(new ContentValues[contentValues.size()]));
+        if(rowsInserted > 0) Toast.makeText(this, "Database synced", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "insertIntoDatabase: "+rowsInserted);
     }
 
     @Override
@@ -140,7 +171,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
                     mMoviesAdapter.notifyDataSetChanged();
                     item.setTitle(getResources().getString(R.string.action_sort_popular));
                 }
+                updateSortKey();
                 return true;
+            case R.id.action_favourite_movies:
+                startActivity(new Intent(this,FavouriteMoviesActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -154,8 +188,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 }

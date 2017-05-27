@@ -1,8 +1,14 @@
 <resources>
-    <string name="app_name">Popular-Movie-App</string>
+    <string name="app_name">Popular Movies</string>
+
     <string name="action_sort_top_rated">Sort by : Top Rated</string>
     <string name="action_sort_popular">Sort by : Popularity</string>
     <string name="movie_thumbnail">Movie Thumbnail</string>
     <string name="movie_overview_label">Movie Overview</string>
     <string name="movie_rating_label">Rating :</string>
+    <string name="action_favourite_movies">Favourite Movies</string>
+    <string name="title_movie_details">Movie Details</string>
+    <string name="button_favourite_label">Mark as favourite</string>
+
+    <string name="content_authority">com.example.dharan1011.popular_movie_app</string>
 </resources>
