@@ -22,5 +22,5 @@ public interface APIService {
 
     @GET("movie/{sort}")
     Call<Data> getMoviesData(@Path("sort") String sort, @Query("api_key") String apiKey);
-
+    
 }

@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
                     mMoviesAdapter.notifyDataSetChanged();
                     item.setTitle(getResources().getString(R.string.action_sort_popular));
                 }
+                updateSortKey();
                 return true;
         }
 
