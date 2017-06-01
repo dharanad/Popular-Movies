@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 
-public class Data {
+public class MovieResponse {
     @SerializedName("page")
     String pageNumber;
     @SerializedName("results")

@@ -4,8 +4,10 @@ package com.example.dharan1011.popular_movie_app.Utils;
  * Created by dharan1011 on 20/5/17.
  */
 
-import com.example.dharan1011.popular_movie_app.Models.Data;
+import com.example.dharan1011.popular_movie_app.Models.MovieResponse;
 import com.example.dharan1011.popular_movie_app.Models.Movie;
+import com.example.dharan1011.popular_movie_app.Models.ReviewResponse;
+import com.example.dharan1011.popular_movie_app.Models.TrailerResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -18,15 +20,15 @@ import retrofit2.http.Query;
 
 public interface APIService {
     String BASE_URL = "http://api.themoviedb.org/3/";
-    String API_KEY = "";
+    String API_KEY = "11898a7d9c90cddb95d62371e94df5fc";
     String IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
     @GET("movie/{sort}")
-    Call<Data> getMoviesData(@Path("sort") String sort, @Query("api_key") String apiKey);
+    Call<MovieResponse> getMoviesData(@Path("sort") String sort, @Query("api_key") String apiKey);
 
     @GET("movie/{id}/reviews")
-    Call<Movie> getMovieReviews(@Path("id") String movieId,@Query("api_key") String apiKey);
+    Call<ReviewResponse> getMovieReviews(@Path("id") String movieId, @Query("api_key") String apiKey);
 
     @GET("movie/{id}/videos")
-    Call<Movie> getMovieVideos(@Path("id") String movieId,@Query("api_key") String apiKey);
+    Call<TrailerResponse> getMovieTrailers(@Path("id") String movieId, @Query("api_key") String apiKey);
 }

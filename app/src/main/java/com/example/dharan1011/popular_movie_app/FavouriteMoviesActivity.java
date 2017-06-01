@@ -17,34 +17,36 @@ import android.util.Log;
 import com.example.dharan1011.popular_movie_app.Adapters.FavouriteMoviesAdapter;
 import com.example.dharan1011.popular_movie_app.Data.MovieContract;
 
-public class FavouriteMoviesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class FavouriteMoviesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String TAG = FavouriteMoviesActivity.class.getSimpleName();
     public static final int LOADER_ID = 3000;
     RecyclerView recyclerView;
     FavouriteMoviesAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite_movies);
+        getSupportActionBar().setTitle(R.string.title_activity_favourite_movies);
 
         recyclerView = (RecyclerView) findViewById(R.id.rcv_favourite_movie_list);
         recyclerView.setHasFixedSize(true);
-        adapter = new FavouriteMoviesAdapter(this,null);
+        adapter = new FavouriteMoviesAdapter(this, null);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        if(savedInstanceState == null){
-            getSupportLoaderManager().initLoader(LOADER_ID,null,this);
-        }else{
-            getSupportLoaderManager().restartLoader(LOADER_ID,null,this);
+        if (savedInstanceState == null) {
+            getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        } else {
+            getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -54,9 +56,9 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 String movieId = (String) viewHolder.itemView.getTag();
                 ContentValues values = new ContentValues();
-                values.put(MovieContract.MovieEntry.COLUMN_MOVIE_IS_FAV,0);
+                values.put(MovieContract.MovieEntry.COLUMN_MOVIE_IS_FAV, 0);
                 getContentResolver().update(MovieContract.MovieEntry.CONTENT_URI.buildUpon().appendPath(movieId).build()
-                        ,values,null,null);
+                        , values, null, null);
             }
         }).attachToRecyclerView(recyclerView);
     }
@@ -66,7 +68,7 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
         return new CursorLoader(this,
                 MovieContract.MovieEntry.CONTENT_URI,
                 null,
-                MovieContract.MovieEntry.COLUMN_MOVIE_IS_FAV+"=?",
+                MovieContract.MovieEntry.COLUMN_MOVIE_IS_FAV + "=?",
                 new String[]{"1"},
                 null);
     }

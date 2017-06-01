@@ -13,7 +13,7 @@ import java.io.Serializable;
  * Created by dharan1011 on 19/5/17.
  */
 
-public class Movie implements Serializable{
+public class Movie implements Serializable {
     @SerializedName("poster_path")
     private String poster_path;
     @SerializedName("adult")
@@ -44,7 +44,7 @@ public class Movie implements Serializable{
 
     public String getPoster_path() {
 
-        return APIService.IMAGE_URL+poster_path;
+        return APIService.IMAGE_URL + poster_path;
     }
 
     public boolean isAdult() {
@@ -56,7 +56,7 @@ public class Movie implements Serializable{
     }
 
     public String getRelease_date() {
-        return "Release Date : "+release_date;
+        return "Release Date : " + release_date;
     }
 
     public String getId() {
@@ -92,7 +92,7 @@ public class Movie implements Serializable{
     }
 
     public String getVote_average() {
-        return "Rating : "+vote_average+"/10";
+        return "Rating : " + vote_average + "/10";
     }
 
     @Override

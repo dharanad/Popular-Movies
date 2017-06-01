@@ -3,6 +3,7 @@ package com.example.dharan1011.popular_movie_app.Data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import com.example.dharan1011.popular_movie_app.Data.MovieContract.MovieEntry;
 
 /**
@@ -19,18 +20,18 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String CREATE_TABLE = "CREATE TABLE "+ MovieEntry.TABLE_NAME+" ("+
-                MovieEntry._ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
-                MovieEntry.COLUMN_MOVIE_ID+" TEXT NOT NULL, "+
-                MovieEntry.COLUMN_MOVIE_TITLE+" TEXT NOT NULL,"+
-                MovieEntry.COLUMN_MOVIE_IS_FAV+" INTEGER NOT NULL DEFAULT 0"+
+        final String CREATE_TABLE = "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
+                MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                MovieEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL, " +
+                MovieEntry.COLUMN_MOVIE_TITLE + " TEXT NOT NULL," +
+                MovieEntry.COLUMN_MOVIE_IS_FAV + " INTEGER NOT NULL DEFAULT 0" +
                 ");";
         db.execSQL(CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+MovieEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME);
         onCreate(db);
     }
 }

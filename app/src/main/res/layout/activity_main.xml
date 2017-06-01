@@ -8,11 +8,12 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcv_movie_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
+
     <ProgressBar
         android:id="@+id/pb_loading"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_gravity="center"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 </FrameLayout>

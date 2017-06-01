@@ -7,11 +7,12 @@
     android:elevation="8dp"
     android:layout_margin="4dp"
     android:background="#dadada">
+
     <ImageView
         android:adjustViewBounds="true"
         android:id="@+id/imv_movie_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/app_name"
-        android:elevation="8dp"/>
+        android:elevation="8dp" />
 </FrameLayout>
