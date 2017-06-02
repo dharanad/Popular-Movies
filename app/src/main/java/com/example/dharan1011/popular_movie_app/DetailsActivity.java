@@ -41,6 +41,8 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
     private static final String EXTRA_OBJECT = "movie-object";
     public static final String TRAILERS_STATE_KEY = "trailers-key";
     public static final String REVIEWS_STATE_KEY = "review-key";
+    public static final String TRAILER_STATE_KEY = "trailer-state-key";
+    public static final String REVIEW_STATE_KEY = "review-state-key";
     private Movie movieData;
     private String movieId;
     private boolean isFavorite;
@@ -84,16 +86,15 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         updateUi(movieData);
 
         if (savedInstanceState != null) {
-            trailerList = Parcels.unwrap(savedInstanceState.getParcelable(TRAILERS_STATE_KEY));
-            reviewList = Parcels.unwrap(savedInstanceState.getParcelable(REVIEWS_STATE_KEY));
-            movieReviewAdapter.setReviewList(reviewList);
-            movieTrailerAdapter.setTrailerList(trailerList);
-            reviewsRecyclerView.setVisibility(View.VISIBLE);
-            trailersRecyclerView.setVisibility(View.VISIBLE);
-        } else {
-            fetchReviews(movieId);
-            fetchTrailers(movieId);
-        }
+                trailerList = Parcels.unwrap(savedInstanceState.getParcelable(TRAILERS_STATE_KEY));
+                reviewList = Parcels.unwrap(savedInstanceState.getParcelable(REVIEWS_STATE_KEY));
+                movieReviewAdapter.setReviewList(reviewList);
+                movieTrailerAdapter.setTrailerList(trailerList);
+                reviewsRecyclerView.setVisibility(View.VISIBLE);
+                trailersRecyclerView.setVisibility(View.VISIBLE);
+        }else{
+        fetchReviews(movieId);
+        fetchTrailers(movieId);}
     }
 
     @Override
@@ -107,7 +108,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         super.onSaveInstanceState(outState);
         outState.putParcelable(TRAILERS_STATE_KEY, Parcels.wrap(trailerList));
         outState.putParcelable(REVIEWS_STATE_KEY, Parcels.wrap(reviewList));
-
     }
 
     private void fetchTrailers(String movieId) {
