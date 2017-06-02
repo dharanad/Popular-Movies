@@ -47,6 +47,8 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
 
         recyclerView.setAdapter(mMoviesAdapter);
 
+        //When device configuration changes populate rcv with persisted data source
+        //else fetch data from database
         if (savedInstanceState != null) {
             mMovieList = Parcels.unwrap(savedInstanceState.getParcelable(MOVIES_STATE_KEY));
             mMoviesAdapter.setmMovieList(mMovieList);
@@ -60,6 +62,7 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
 
     }
 
+    //Persist movieList
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -72,6 +75,7 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
         return super.onOptionsItemSelected(item);
     }
 
+    // Fetch favourite movies from database
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(this,
@@ -93,6 +97,11 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
         mMoviesAdapter.setmMovieList(null);
     }
 
+    /*
+    * Parses the cursor and creats and list of Movie objects
+    * @params Movie object
+    * @return List<Movie>
+    * */
     private List<Movie> parseCursor(Cursor cursor) {
         if (cursor == null) return null;
         List<Movie> movieList = new ArrayList<>();
@@ -111,6 +120,10 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
         return movieList;
     }
 
+    /*
+    * Interface callback.
+    * Invoked when Movie item in clicked the FavouriteMovieActivity to start DetailsActivity
+    * */
     @Override
     public void onItemClick(Movie movie) {
         Intent i = new Intent(FavouriteMoviesActivity.this, DetailsActivity.class);

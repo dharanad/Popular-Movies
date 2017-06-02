@@ -41,8 +41,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
     private static final String EXTRA_OBJECT = "movie-object";
     public static final String TRAILERS_STATE_KEY = "trailers-key";
     public static final String REVIEWS_STATE_KEY = "review-key";
-    public static final String TRAILER_STATE_KEY = "trailer-state-key";
-    public static final String REVIEW_STATE_KEY = "review-state-key";
     private Movie movieData;
     private String movieId;
     private boolean isFavorite;
@@ -51,7 +49,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
     List<Review> reviewList;
     List<Trailer> trailerList;
 
-    //TODO Merge with Master Branch
     ActivityDetailsBinding detailsBinding;
     MovieReviewAdapter movieReviewAdapter;
     MovieTrailerAdapter movieTrailerAdapter;
@@ -67,6 +64,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
 
         detailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details);
 
+        //RCV setup
         reviewsRecyclerView = (RecyclerView) findViewById(R.id.rcv_reviews_list);
         movieReviewAdapter = new MovieReviewAdapter(this);
         reviewsRecyclerView.setHasFixedSize(true);
@@ -79,22 +77,26 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         trailersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         trailersRecyclerView.setAdapter(movieTrailerAdapter);
 
+        // get parcel from passed in intent
         if (getIntent().getExtras() != null) {
             movieData = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_OBJECT));
             movieId = movieData.getId();
         }
         updateUi(movieData);
-
+        /*
+        * When device configuration changes and populates the rcv with persisted data
+         */
         if (savedInstanceState != null) {
-                trailerList = Parcels.unwrap(savedInstanceState.getParcelable(TRAILERS_STATE_KEY));
-                reviewList = Parcels.unwrap(savedInstanceState.getParcelable(REVIEWS_STATE_KEY));
-                movieReviewAdapter.setReviewList(reviewList);
-                movieTrailerAdapter.setTrailerList(trailerList);
-                reviewsRecyclerView.setVisibility(View.VISIBLE);
-                trailersRecyclerView.setVisibility(View.VISIBLE);
-        }else{
-        fetchReviews(movieId);
-        fetchTrailers(movieId);}
+            trailerList = Parcels.unwrap(savedInstanceState.getParcelable(TRAILERS_STATE_KEY));
+            reviewList = Parcels.unwrap(savedInstanceState.getParcelable(REVIEWS_STATE_KEY));
+            movieReviewAdapter.setReviewList(reviewList);
+            movieTrailerAdapter.setTrailerList(trailerList);
+            reviewsRecyclerView.setVisibility(View.VISIBLE);
+            trailersRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            fetchReviews(movieId);
+            fetchTrailers(movieId);
+        }
     }
 
     @Override
@@ -103,6 +105,9 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
 
     }
 
+    /*
+    * Saves the trailerList and reviewsList
+    * */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -110,6 +115,13 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         outState.putParcelable(REVIEWS_STATE_KEY, Parcels.wrap(reviewList));
     }
 
+    /*
+* Fetches Reviews data corresponding to movieId
+* Response body is a list
+* List is set to adapter as a data source
+* Populates the rcv
+* @param movieId
+* */
     private void fetchTrailers(String movieId) {
         detailsBinding.pbTrailersLoading.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
@@ -143,6 +155,13 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
 
     }
 
+    /*
+    * Fetches trailer data corresponding to movieId
+    * Response body is a list
+    * List is set to adapter as a data source
+    * Populates the rcv
+    * @param movieId
+    * */
     private void fetchReviews(String movieId) {
         detailsBinding.pbReviewsLoading.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
@@ -176,7 +195,8 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         });
     }
 
-
+    /*
+    * Updated the UI based on Movie object data*/
     private void updateUi(Movie movieInfo) {
         detailsBinding.tvMovieTitle.setText(movieInfo.getTitle());
         detailsBinding.tvMovieRating.setText(movieInfo.getVote_average());
@@ -190,6 +210,11 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         toggleFavButton();
     }
 
+    /*
+    * When favorite button clicked
+    * If movie is not favourite and movie is added to database and its isFav column is toogled to 1
+    * If movies is favorite, then isFav column in the database is toogled
+    * */
     public void toggleFavourites(View v) {
         int val;
         if (!isFavorite) {
@@ -211,6 +236,10 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         toggleFavButton();
     }
 
+    /*
+    * Toogle the favourite button text label
+    * if the movie is favorite list it show label to remove it and vise versa
+    * */
     private void toggleFavButton() {
         if (isFavorite)
             detailsBinding.btnFavouriteMovie.setText(getString(R.string.remove_favorite_label));
@@ -218,6 +247,11 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
             detailsBinding.btnFavouriteMovie.setText(R.string.add_favourite_label);
     }
 
+    /*
+    *check whether the movie corresponding to id is in favourite movies database or not
+    *@param movie id
+    * @return boolean
+     */
     private boolean isFavourite(String id) {
         Cursor c = getContentResolver().query(
                 ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, Long.parseLong(id)),
@@ -237,6 +271,12 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         return cursor != null && cursor.getCount() == 1;
     }
 
+    /*
+    * Inserts the current  movie's data from Movie object into the Content Provider
+    * @param Movie object
+    * @return
+    *
+    * */
     private void addMovieToDatabase(Movie movie) {
         ContentValues values = new ContentValues();
         values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie.getId());
@@ -248,6 +288,11 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, values);
     }
 
+    /*
+    * Interface callback
+    * Invoked when Movie trailer is clicked
+    * Launched youtube to play trailer
+    * */
     @Override
     public void onItemClick(String key) {
         String url = getString(R.string.youtube_base_url) + key;

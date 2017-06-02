@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
     private static final String EXTRA_OBJECT = "movie-object";
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String MOVIES_STATE_KEY = "movies_list";
-    private static final String RCV_STATE_KEY = "movies_list";
 
     private static final String SORT_KEY = "sort_key";
     private static final String SHARED_PREFERENCE_KEY = "shared_preference_key";
@@ -59,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         setContentView(R.layout.activity_main);
         mProgressBar = (ProgressBar) findViewById(R.id.pb_loading);
 
+        //setup recycler view
         mRecyclerView = (RecyclerView) findViewById(R.id.rcv_movie_list);
         mRecyclerView.setHasFixedSize(true);
 
@@ -67,16 +67,20 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         mMoviesAdapter = new MoviesAdapter(MainActivity.this);
         mRecyclerView.setAdapter(mMoviesAdapter);
 
+        //Shared perefrence to store sort type i.e fetch last sorted list
         sortType = getSharedPreferences(SHARED_PREFERENCE_KEY, 0).getString(SORT_KEY, POPULAR);
 
+        //when deviec configuration changes set adapted data source to persisted movieList
         if (savedInstanceState != null) {
             mMovieList = Parcels.unwrap(savedInstanceState.getParcelable(MOVIES_STATE_KEY));
             mMoviesAdapter.setmMovieList(mMovieList);
 
         } else {
+            // if device is connected to internet
             if (isOnline())
                 fetchMovies(sortType);
             else
+                //if device offline show AlertDialog
                 new AlertDialog.Builder(this).setTitle(R.string.error_connectivity_title).setMessage(R.string.error_connectivity_message)
                         .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                             @Override
@@ -92,14 +96,17 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
     protected void onResume() {
         super.onResume();
     }
-    
+
+
+    //persist movieList
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(MOVIES_STATE_KEY, Parcels.wrap(mMovieList));
     }
-
-
+    /*
+    * Checks wheather device is connected to internet or not
+    * */
     public boolean isOnline() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -116,6 +123,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
+    /*
+    * fetch movie based on sort type
+    * and create movies list
+    * @param sortType -> Popular or Top Rated
+    * @returns List<Movie>
+    * */
     private void fetchMovies(String sortType) {
         showProgressBar();
         Retrofit retrofit = new Retrofit.Builder()
@@ -156,8 +169,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
             }
         });
     }
-
-
+    /*
+    * Callback interface
+    * Invoked when movie item from rcv is clicked to start DetailsActivity and pass in movie object as a parcel
+    * */
     @Override
     public void onItemClick(Movie movie) {
         Intent i = new Intent(MainActivity.this, DetailsActivity.class);
@@ -170,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        //set menu item title based on sort key
         if (sortType.equals(TOP_RATED)) {
             menu.getItem(0).setTitle(getResources().getString(R.string.action_sort_popular));
         } else {
@@ -177,9 +193,17 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         }
         return super.onCreateOptionsMenu(menu);
     }
+    //update sort key when sort type is changed
+    private void updateSortKey() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCE_KEY, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SORT_KEY, sortType);
+        editor.apply();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //fetch movies list based on selected sort ket and persist sort key and update menu item text
         switch (item.getItemId()) {
             case R.id.action_sort:
                 if (sortType.equals(TOP_RATED)) {
@@ -202,13 +226,5 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
 
         return super.onOptionsItemSelected(item);
     }
-
-    private void updateSortKey() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCE_KEY, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(SORT_KEY, sortType);
-        editor.apply();
-    }
-
 
 }

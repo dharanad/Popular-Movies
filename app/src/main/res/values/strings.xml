@@ -5,7 +5,6 @@
     <string name="action_sort_popular">Sort by : Popularity</string>
     <string name="movie_thumbnail">Movie Thumbnail</string>
     <string name="movie_overview_label">Movie Overview</string>
-    <string name="movie_rating_label">Rating :</string>
     <string name="action_favourite_movies">Favourite Movies</string>
     <string name="title_activity_movie_details">Movie Details</string>
 
