@@ -3,8 +3,8 @@
     package="com.example.dharan1011.popular_movie_app">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,8 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DetailsActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".DetailsActivity" />
 
         <provider
             android:name=".Data.MovieContentProvider"

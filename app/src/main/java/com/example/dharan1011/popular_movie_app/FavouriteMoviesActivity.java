@@ -1,66 +1,66 @@
 package com.example.dharan1011.popular_movie_app;
 
-import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.MenuItem;
 
-import com.example.dharan1011.popular_movie_app.Adapters.FavouriteMoviesAdapter;
+import com.example.dharan1011.popular_movie_app.Adapters.MoviesAdapter;
 import com.example.dharan1011.popular_movie_app.Data.MovieContract;
+import com.example.dharan1011.popular_movie_app.Models.Movie;
 
-public class FavouriteMoviesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+import java.util.ArrayList;
+import java.util.List;
 
-    public static final String TAG = FavouriteMoviesActivity.class.getSimpleName();
-    public static final int LOADER_ID = 3000;
+public class FavouriteMoviesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,MoviesAdapter.ItemClickHandler{
+    private static final String EXTRA_OBJECT = "movie-object";
     RecyclerView recyclerView;
-    FavouriteMoviesAdapter adapter;
-
+    MoviesAdapter mMoviesAdapter;
+    public static final int LOADER_ID = 3000;
+    public static final String TAG = FavouriteMoviesActivity.class.getSimpleName();
+    List<Movie> mMovieList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite_movies);
-        getSupportActionBar().setTitle(R.string.title_activity_favourite_movies);
+        getSupportActionBar().setTitle(getString(R.string.title_activity_favourite_movies));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        recyclerView = (RecyclerView) findViewById(R.id.rcv_favourite_movie_list);
+        recyclerView = (RecyclerView) findViewById(R.id.rcv_favourite_movies_list);
         recyclerView.setHasFixedSize(true);
-        adapter = new FavouriteMoviesAdapter(this, null);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(this,
+                (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)?2:4));
 
-        if (savedInstanceState == null) {
-            getSupportLoaderManager().initLoader(LOADER_ID, null, this);
-        } else {
-            getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
-        }
+        mMoviesAdapter = new MoviesAdapter(this);
+
+        recyclerView.setAdapter(mMoviesAdapter);
+
+        if(getSupportLoaderManager().getLoader(LOADER_ID) == null)
+            getSupportLoaderManager().initLoader(LOADER_ID,null,this);
+        else
+            getSupportLoaderManager().restartLoader(LOADER_ID,null,this);
+
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                String movieId = (String) viewHolder.itemView.getTag();
-                ContentValues values = new ContentValues();
-                values.put(MovieContract.MovieEntry.COLUMN_MOVIE_IS_FAV, 0);
-                getContentResolver().update(MovieContract.MovieEntry.CONTENT_URI.buildUpon().appendPath(movieId).build()
-                        , values, null, null);
-            }
-        }).attachToRecyclerView(recyclerView);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() ==  android.R.id.home) onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -75,11 +75,38 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
+        mMovieList = parseCursor(data);
+        mMoviesAdapter.setmMovieList(mMovieList);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
+        mMoviesAdapter.setmMovieList(null);
     }
+
+    private List<Movie> parseCursor(Cursor cursor){
+        if(cursor == null) return null;
+        List<Movie> movieList = new ArrayList<>();
+        while (cursor.moveToNext()){
+            Movie movie = new Movie();
+            Log.d(TAG, "parseCursor: "+cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE)));
+            movie.setId(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID)));
+            movie.setTitle(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE)));
+            movie.setOverview(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW)));
+            movie.setPoster_path(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH)));
+            movie.setRelease_date(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE)));
+            movie.setVote_average(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE)));
+
+            movieList.add(movie);
+        }
+        return movieList;
+    }
+
+    @Override
+    public void onItemClick(Movie movie) {
+        Intent i = new Intent(FavouriteMoviesActivity.this, DetailsActivity.class);
+        i.putExtra(EXTRA_OBJECT, movie);
+        startActivity(i);
+    }
+
 }

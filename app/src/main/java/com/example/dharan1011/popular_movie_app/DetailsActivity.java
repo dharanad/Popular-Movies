@@ -11,6 +11,7 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.example.dharan1011.popular_movie_app.Adapters.MovieReviewAdapter;
@@ -30,12 +31,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailsActivity extends AppCompatActivity implements MovieTrailerAdapter.ItemClickListener {
+
     private static final String TAG = DetailsActivity.class.getSimpleName();
     private Movie movieData;
     private String movieId;
     private boolean isFavorite;
     Vibrator vibrator;
 
+    //TODO Merge with Master Branch
     ActivityDetailsBinding detailsBinding;
     MovieReviewAdapter movieReviewAdapter;
     MovieTrailerAdapter movieTrailerAdapter;
@@ -63,10 +66,13 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         trailersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         trailersRecyclerView.setAdapter(movieTrailerAdapter);
 
+//        getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,null,null);
+
 
         if (getIntent().hasExtra(MainActivity.EXTRA_OBJECT)) {
             movieData = (Movie) getIntent().getSerializableExtra(MainActivity.EXTRA_OBJECT);
             movieId = movieData.getId();
+            Log.d(TAG, "onCreate: "+movieData.getTitle());
         } else {
             finish();
         }
@@ -83,6 +89,11 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     private void fetchTrailers(String movieId) {
         detailsBinding.pbTrailersLoading.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
@@ -94,14 +105,16 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         call.enqueue(new Callback<TrailerResponse>() {
             @Override
             public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
+                detailsBinding.pbTrailersLoading.setVisibility(View.INVISIBLE);
                 if (!response.isSuccessful()) {
-                    detailsBinding.pbTrailersLoading.setVisibility(View.INVISIBLE);
                     detailsBinding.tvTrailersError.setVisibility(View.VISIBLE);
                     return;
                 }
-                trailersRecyclerView.setVisibility(View.VISIBLE);
-                detailsBinding.pbTrailersLoading.setVisibility(View.INVISIBLE);
-                movieTrailerAdapter.setTrailerList(response.body().getResults());
+                if (response.body().getResults().size() != 0) {
+                    trailersRecyclerView.setVisibility(View.VISIBLE);
+                    movieTrailerAdapter.setTrailerList(response.body().getResults());
+                } else
+                    detailsBinding.tvTrailersError.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -124,14 +137,17 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         call.enqueue(new Callback<ReviewResponse>() {
             @Override
             public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
+                detailsBinding.pbReviewsLoading.setVisibility(View.INVISIBLE);
                 if (!response.isSuccessful()) {
-                    detailsBinding.pbReviewsLoading.setVisibility(View.INVISIBLE);
                     detailsBinding.tvReviewsError.setVisibility(View.VISIBLE);
                     return;
                 }
-                detailsBinding.rcvReviewsList.setVisibility(View.VISIBLE);
-                detailsBinding.pbReviewsLoading.setVisibility(View.INVISIBLE);
-                movieReviewAdapter.setReviewList(response.body().getResults());
+                if (response.body().getResults().size() != 0) {
+                    reviewsRecyclerView.setVisibility(View.VISIBLE);
+                    movieReviewAdapter.setReviewList(response.body().getResults());
+                } else
+                    detailsBinding.tvReviewsError.setVisibility(View.VISIBLE);
+
             }
 
             @Override
@@ -167,12 +183,12 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
 
 
     private void updateUi(Movie movieInfo) {
-        detailsBinding.tvMovieTitle.setText(movieInfo.getOriginal_title());
+        detailsBinding.tvMovieTitle.setText(movieInfo.getTitle());
         detailsBinding.tvMovieRating.setText(movieInfo.getVote_average());
         detailsBinding.tvMovieOverview.setText(movieInfo.getOverview());
         detailsBinding.tvMovieReleaseDate.setText(movieInfo.getRelease_date());
         Picasso.with(this)
-                .load(movieInfo.getPoster_path())
+                .load(APIService.IMAGE_URL+movieInfo.getPoster_path())
                 .into(detailsBinding.imvMovieThumbnail);
 
         isFavorite = (isMovieAdded(movieInfo.getId())) && isFavourite(movieId);
@@ -209,6 +225,10 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         ContentValues values = new ContentValues();
         values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie.getId());
         values.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
+        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,movie.getOverview());
+        values.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH,movie.getPoster_path());
+        values.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,movie.getRelease_date());
+        values.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE,movie.getVote_average());
         getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, values);
     }
 

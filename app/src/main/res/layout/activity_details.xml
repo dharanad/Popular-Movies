@@ -97,11 +97,11 @@
                 android:textStyle="bold" />
 
             <FrameLayout
-                android:background="@drawable/container_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp">
+                android:layout_marginStart="16dp"
+                android:background="@drawable/container_background">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rcv_trailers_list"
@@ -115,6 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
                     android:text="@string/error_trailers"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:visibility="invisible" />
 
                 <ProgressBar
@@ -136,18 +137,18 @@
                 android:textStyle="bold" />
 
             <FrameLayout
-                android:background="@drawable/container_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp">
+                android:layout_marginStart="16dp"
+                android:background="@drawable/container_background">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rcv_reviews_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
                 <TextView
                     android:id="@+id/tv_reviews_error"
@@ -155,6 +156,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
                     android:text="@string/error_reviews"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:visibility="invisible" />
 
                 <ProgressBar

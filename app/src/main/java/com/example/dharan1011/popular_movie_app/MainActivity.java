@@ -4,10 +4,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,10 +23,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.dharan1011.popular_movie_app.Adapters.MoviesAdapter;
-import com.example.dharan1011.popular_movie_app.Models.MovieResponse;
+import com.example.dharan1011.popular_movie_app.Data.MovieContract;
 import com.example.dharan1011.popular_movie_app.Models.Movie;
+import com.example.dharan1011.popular_movie_app.Models.MovieResponse;
 import com.example.dharan1011.popular_movie_app.Utils.APIService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,14 +38,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.ItemClickHandler {
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.ItemClickHandler{
 
     public static final String EXTRA_OBJECT = "movie-object";
     private static final String TAG = MainActivity.class.getSimpleName();
+
     private static final String SORT_KEY = "sort_key";
     private static final String SHARED_PREFERENCE_KEY = "shared_preference_key";
     private static final String TOP_RATED = "top_rated";
     private static final String POPULAR = "popular";
+
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
     private MoviesAdapter mMoviesAdapter;
@@ -63,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         sortType = getSharedPreferences(SHARED_PREFERENCE_KEY, 0).getString(SORT_KEY, POPULAR);
 
         if (isOnline())
-            fetchContent(sortType);
+            fetchMovies(sortType);
         else
             new AlertDialog.Builder(this).setTitle(R.string.error_connectivity_title).setMessage(R.string.error_connectivity_message)
                     .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
@@ -97,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void fetchContent(String sortType) {
+    private void fetchMovies(String sortType) {
         showProgressBar();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(APIService.BASE_URL)
@@ -138,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         });
     }
 
+
     @Override
     public void onItemClick(Movie movie) {
         Intent i = new Intent(MainActivity.this, DetailsActivity.class);
@@ -162,12 +171,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
             case R.id.action_sort:
                 if (sortType.equals(TOP_RATED)) {
                     sortType = POPULAR;
-                    fetchContent(sortType);
+                    fetchMovies(sortType);
                     mMoviesAdapter.notifyDataSetChanged();
                     item.setTitle(getResources().getString(R.string.action_sort_top_rated));
                 } else {
                     sortType = TOP_RATED;
-                    fetchContent(sortType);
+                    fetchMovies(sortType);
                     mMoviesAdapter.notifyDataSetChanged();
                     item.setTitle(getResources().getString(R.string.action_sort_popular));
                 }
@@ -175,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
                 return true;
             case R.id.action_favourite_movies:
                 startActivity(new Intent(this, FavouriteMoviesActivity.class));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -186,5 +196,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         editor.putString(SORT_KEY, sortType);
         editor.apply();
     }
+
 
 }
