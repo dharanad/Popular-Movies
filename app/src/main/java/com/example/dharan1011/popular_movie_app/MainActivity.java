@@ -19,8 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.dharan1011.popular_movie_app.Adapters.MoviesAdapter;
-import com.example.dharan1011.popular_movie_app.Models.MovieResponse;
 import com.example.dharan1011.popular_movie_app.Models.Movie;
+import com.example.dharan1011.popular_movie_app.Models.MovieResponse;
 import com.example.dharan1011.popular_movie_app.Utils.APIService;
 
 import java.util.List;

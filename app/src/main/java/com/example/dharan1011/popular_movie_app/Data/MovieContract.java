@@ -1,6 +1,5 @@
 package com.example.dharan1011.popular_movie_app.Data;
 
-import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 

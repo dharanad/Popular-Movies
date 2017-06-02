@@ -1,9 +1,6 @@
 package com.example.dharan1011.popular_movie_app.Models;
 
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.example.dharan1011.popular_movie_app.Utils.APIService;
 import com.google.gson.annotations.SerializedName;
 

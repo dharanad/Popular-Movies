@@ -94,14 +94,16 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         call.enqueue(new Callback<TrailerResponse>() {
             @Override
             public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
+                detailsBinding.pbTrailersLoading.setVisibility(View.INVISIBLE);
                 if (!response.isSuccessful()) {
-                    detailsBinding.pbTrailersLoading.setVisibility(View.INVISIBLE);
                     detailsBinding.tvTrailersError.setVisibility(View.VISIBLE);
                     return;
                 }
-                trailersRecyclerView.setVisibility(View.VISIBLE);
-                detailsBinding.pbTrailersLoading.setVisibility(View.INVISIBLE);
-                movieTrailerAdapter.setTrailerList(response.body().getResults());
+                if (response.body().getResults().size() != 0) {
+                    trailersRecyclerView.setVisibility(View.VISIBLE);
+                    movieTrailerAdapter.setTrailerList(response.body().getResults());
+                } else
+                    detailsBinding.tvTrailersError.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -124,14 +126,17 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         call.enqueue(new Callback<ReviewResponse>() {
             @Override
             public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
+                detailsBinding.pbReviewsLoading.setVisibility(View.INVISIBLE);
                 if (!response.isSuccessful()) {
-                    detailsBinding.pbReviewsLoading.setVisibility(View.INVISIBLE);
                     detailsBinding.tvReviewsError.setVisibility(View.VISIBLE);
                     return;
                 }
-                detailsBinding.rcvReviewsList.setVisibility(View.VISIBLE);
-                detailsBinding.pbReviewsLoading.setVisibility(View.INVISIBLE);
-                movieReviewAdapter.setReviewList(response.body().getResults());
+                if (response.body().getResults().size() != 0) {
+                    reviewsRecyclerView.setVisibility(View.VISIBLE);
+                    movieReviewAdapter.setReviewList(response.body().getResults());
+                } else
+                    detailsBinding.tvReviewsError.setVisibility(View.VISIBLE);
+
             }
 
             @Override
