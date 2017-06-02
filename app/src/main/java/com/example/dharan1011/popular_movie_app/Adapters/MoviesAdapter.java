@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.example.dharan1011.popular_movie_app.Models.Movie;
 import com.example.dharan1011.popular_movie_app.R;
+import com.example.dharan1011.popular_movie_app.Utils.APIService;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemV
 
         void bind(Movie movie) {
             Picasso.with(itemView.getContext())
-                    .load(movie.getPoster_path())
+                    .load(APIService.IMAGE_URL+movie.getPoster_path())
                     .placeholder(R.drawable.ic_place_holder)
                     .into(movieItemImageView);
         }

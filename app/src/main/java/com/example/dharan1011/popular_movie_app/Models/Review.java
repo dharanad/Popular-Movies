@@ -3,23 +3,31 @@ package com.example.dharan1011.popular_movie_app.Models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 /**
  * Created by dharan1011 on 2/6/17.
  */
-
+@Parcel
 public class Review {
     @SerializedName("id")
-    @Expose
-    private String id;
+    public String id;
     @SerializedName("author")
-    @Expose
-    private String author;
+    public String author;
     @SerializedName("content")
-    @Expose
-    private String content;
+    public String content;
     @SerializedName("url")
-    @Expose
-    private String url;
+    public String url;
+
+    public Review() {
+    }
+
+    public Review(String id, String author, String content, String url) {
+        this.id = id;
+        this.author = author;
+        this.content = content;
+        this.url = url;
+    }
 
     public String getId() {
         return id;

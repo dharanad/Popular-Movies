@@ -3,58 +3,31 @@ package com.example.dharan1011.popular_movie_app.Models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 /**
  * Created by dharan1011 on 2/6/17.
  */
 
+@Parcel
 public class Trailer {
-    @SerializedName("id")
-    @Expose
-    private String id;
-    @SerializedName("iso_639_1")
-    @Expose
-    private String iso6391;
-    @SerializedName("iso_3166_1")
-    @Expose
-    private String iso31661;
     @SerializedName("key")
-    @Expose
-    private String key;
+    public String key;
     @SerializedName("name")
-    @Expose
-    private String name;
+    public String name;
     @SerializedName("site")
-    @Expose
-    private String site;
-    @SerializedName("size")
-    @Expose
-    private Integer size;
+    public String site;
     @SerializedName("type")
-    @Expose
-    private String type;
+    public String type;
 
-    public String getId() {
-        return id;
+    public Trailer() {
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getIso6391() {
-        return iso6391;
-    }
-
-    public void setIso6391(String iso6391) {
-        this.iso6391 = iso6391;
-    }
-
-    public String getIso31661() {
-        return iso31661;
-    }
-
-    public void setIso31661(String iso31661) {
-        this.iso31661 = iso31661;
+    public Trailer(String key, String name, String site, String type) {
+        this.key = key;
+        this.name = name;
+        this.site = site;
+        this.type = type;
     }
 
     public String getKey() {
@@ -81,14 +54,6 @@ public class Trailer {
         this.site = site;
     }
 
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
     public String getType() {
         return type;
     }
@@ -100,13 +65,9 @@ public class Trailer {
     @Override
     public String toString() {
         return "Trailer{" +
-                "id='" + id + '\'' +
-                ", iso6391='" + iso6391 + '\'' +
-                ", iso31661='" + iso31661 + '\'' +
-                ", key='" + key + '\'' +
+                "key='" + key + '\'' +
                 ", name='" + name + '\'' +
                 ", site='" + site + '\'' +
-                ", size=" + size +
                 ", type='" + type + '\'' +
                 '}';
     }

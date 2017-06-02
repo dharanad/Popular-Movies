@@ -5,7 +5,6 @@ package com.example.dharan1011.popular_movie_app.Utils;
  */
 
 import com.example.dharan1011.popular_movie_app.Models.MovieResponse;
-import com.example.dharan1011.popular_movie_app.Models.Movie;
 import com.example.dharan1011.popular_movie_app.Models.ReviewResponse;
 import com.example.dharan1011.popular_movie_app.Models.TrailerResponse;
 

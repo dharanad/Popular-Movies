@@ -11,7 +11,7 @@ import com.example.dharan1011.popular_movie_app.Data.MovieContract.MovieEntry;
  */
 
 public class MovieDbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "movies.db";
 
     public MovieDbHelper(Context context) {
@@ -24,6 +24,10 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 MovieEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL, " +
                 MovieEntry.COLUMN_MOVIE_TITLE + " TEXT NOT NULL," +
+                MovieEntry.COLUMN_MOVIE_OVERVIEW +" TEXT,"+
+                MovieEntry.COLUMN_POSTER_PATH +" TEXT,"+
+                MovieEntry.COLUMN_VOTE_AVERAGE +" TEXT,"+
+                MovieEntry.COLUMN_RELEASE_DATE+" TEXT,"+
                 MovieEntry.COLUMN_MOVIE_IS_FAV + " INTEGER NOT NULL DEFAULT 0" +
                 ");";
         db.execSQL(CREATE_TABLE);
