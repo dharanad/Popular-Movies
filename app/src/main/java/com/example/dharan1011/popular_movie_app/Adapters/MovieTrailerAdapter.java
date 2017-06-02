@@ -52,7 +52,7 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
 
     @Override
     public int getItemCount() {
-        return trailerList.size();
+        return (trailerList != null)?trailerList.size():0;
     }
 
     public class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
