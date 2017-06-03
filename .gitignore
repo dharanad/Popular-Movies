@@ -1,0 +1,7 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea
+.gradle/
+Popular-Movies.iml
+app/app.iml
+build/
+local.properties

@@ -1,4 +1,4 @@
-# PopularMovies
+# Popular Movies
 An Android app to allow users to discover the most popular movies playing.
 
 ### The Movie DB API Key is required.
