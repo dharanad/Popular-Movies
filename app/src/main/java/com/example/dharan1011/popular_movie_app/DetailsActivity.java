@@ -242,9 +242,9 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
     * */
     private void toggleFavButton() {
         if (isFavorite)
-            detailsBinding.btnFavouriteMovie.setText(getString(R.string.remove_favorite_label));
+            detailsBinding.btnFavouriteMovie.setImageResource(R.drawable.fav);
         else
-            detailsBinding.btnFavouriteMovie.setText(R.string.add_favourite_label);
+            detailsBinding.btnFavouriteMovie.setImageResource(R.drawable.unfav);
     }
 
     /*
