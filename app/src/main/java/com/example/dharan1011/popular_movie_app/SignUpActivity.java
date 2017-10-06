@@ -59,7 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
     private String city;
     private String gender;
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDrivesDatabaseReference;
+    private DatabaseReference mDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +73,8 @@ public class SignUpActivity extends AppCompatActivity {
         genderArray.add("Male");
         genderArray.add("Others");
         setupSpinner();
-
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDrivesDatabaseReference = mFirebaseDatabase.getReference().child("userProfile");
-
+        mDatabaseReference = mFirebaseDatabase.getReference().child("userProfile");
     }
 
     @Override
@@ -130,6 +128,11 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(SignUpActivity.this, getResources().getString(R.string.account_created_now_verify_it), Toast.LENGTH_LONG).show();
+                            gender = userGender;
+                            userEmailEditText.setText("");
+                            accountPasswordEditText.setText("");
+                            userNameEditText.setText("");
+                            userCityEditText.setText("");
 
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
@@ -138,17 +141,11 @@ public class SignUpActivity extends AppCompatActivity {
                             // the user will receive another verification email.
 
                             UserProfile userProfile = new UserProfile(name, city, gender, email);
-                            gender = userGender;
-                            userEmailEditText.setText("");
-                            accountPasswordEditText.setText("");
-                            userNameEditText.setText("");
-                            userCityEditText.setText("");
-
-                            mDrivesDatabaseReference.child(user.getUid()).push().setValue(userProfile);
+                            mDatabaseReference.child(user.getUid()).push().setValue(userProfile);
 
                             sendEmailVerification(user);
-                            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
                             mAuth.signOut();
+                            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
                             finish();
 
                         } else {
