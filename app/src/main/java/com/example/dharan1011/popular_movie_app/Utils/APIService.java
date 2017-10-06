@@ -19,7 +19,7 @@ import retrofit2.http.Query;
 
 public interface APIService {
     String BASE_URL = "http://api.themoviedb.org/3/";
-    String API_KEY = "4182aa25bab27d06344e404f65c4ae76";
+    String API_KEY = "PUT_YOUR_KEY_HERE";
     String IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
     @GET("movie/{sort}")
