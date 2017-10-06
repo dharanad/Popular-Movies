@@ -1,4 +1,4 @@
-package com.example.dharan1011.popular_movie_app.Utils;
+package com.example.dharan1011.popular_movie_app.REST;
 
 /**
  * Created by dharan1011 on 20/5/17.

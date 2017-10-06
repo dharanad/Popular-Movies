@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import com.example.dharan1011.popular_movie_app.Models.Movie;
 import com.example.dharan1011.popular_movie_app.R;
-import com.example.dharan1011.popular_movie_app.Utils.APIService;
+import com.example.dharan1011.popular_movie_app.REST.APIService;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

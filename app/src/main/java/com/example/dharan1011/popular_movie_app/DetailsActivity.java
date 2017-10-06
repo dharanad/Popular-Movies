@@ -21,7 +21,7 @@ import com.example.dharan1011.popular_movie_app.Models.Review;
 import com.example.dharan1011.popular_movie_app.Models.ReviewResponse;
 import com.example.dharan1011.popular_movie_app.Models.Trailer;
 import com.example.dharan1011.popular_movie_app.Models.TrailerResponse;
-import com.example.dharan1011.popular_movie_app.Utils.APIService;
+import com.example.dharan1011.popular_movie_app.REST.APIService;
 import com.example.dharan1011.popular_movie_app.databinding.ActivityDetailsBinding;
 import com.squareup.picasso.Picasso;
 
@@ -62,18 +62,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
 
         detailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details);
 
-        //RCV setup
-        reviewsRecyclerView = (RecyclerView) findViewById(R.id.rcv_reviews_list);
-        movieReviewAdapter = new MovieReviewAdapter(this);
-        reviewsRecyclerView.setHasFixedSize(true);
-        reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        reviewsRecyclerView.setAdapter(movieReviewAdapter);
-
-        trailersRecyclerView = (RecyclerView) findViewById(R.id.rcv_trailers_list);
-        movieTrailerAdapter = new MovieTrailerAdapter(this);
-        trailersRecyclerView.setHasFixedSize(true);
-        trailersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        trailersRecyclerView.setAdapter(movieTrailerAdapter);
+        setupRecyclerViewUi();
 
         // get parcel from passed in intent
         if (getIntent().getExtras() != null) {
@@ -97,10 +86,19 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    private void setupRecyclerViewUi() {
+        //RCV setup
+        reviewsRecyclerView = (RecyclerView) findViewById(R.id.rcv_reviews_list);
+        movieReviewAdapter = new MovieReviewAdapter(this);
+        reviewsRecyclerView.setHasFixedSize(true);
+        reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        reviewsRecyclerView.setAdapter(movieReviewAdapter);
 
+        trailersRecyclerView = (RecyclerView) findViewById(R.id.rcv_trailers_list);
+        movieTrailerAdapter = new MovieTrailerAdapter(this);
+        trailersRecyclerView.setHasFixedSize(true);
+        trailersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        trailersRecyclerView.setAdapter(movieTrailerAdapter);
     }
 
     /*
@@ -114,12 +112,12 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
     }
 
     /*
-* Fetches Reviews data corresponding to movieId
-* Response body is a list
-* List is set to adapter as a data source
-* Populates the rcv
-* @param movieId
-* */
+    * Fetches Reviews data corresponding to movieId
+    * Response body is a list
+    * List is set to adapter as a data source
+    * Populates the rcv
+    * @param movieId
+    */
     private void fetchTrailers(String movieId) {
         detailsBinding.pbTrailersLoading.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()

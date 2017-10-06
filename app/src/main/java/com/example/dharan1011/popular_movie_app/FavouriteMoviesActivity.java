@@ -98,7 +98,7 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
     }
 
     /*
-    * Parses the cursor and creats and list of Movie objects
+    * Creates a list of movies object from cursor object
     * @params Movie object
     * @return List<Movie>
     * */

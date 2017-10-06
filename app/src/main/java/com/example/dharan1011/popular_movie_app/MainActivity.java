@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.example.dharan1011.popular_movie_app.Adapters.MoviesAdapter;
 import com.example.dharan1011.popular_movie_app.Models.Movie;
 import com.example.dharan1011.popular_movie_app.Models.MovieResponse;
-import com.example.dharan1011.popular_movie_app.Utils.APIService;
+import com.example.dharan1011.popular_movie_app.REST.APIService;
 
 import org.parceler.Parcels;
 
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         outState.putParcelable(MOVIES_STATE_KEY, Parcels.wrap(mMovieList));
     }
     /*
-    * Checks wheather device is connected to internet or not
+    * Checks whether device is connected to internet or not
     * */
     public boolean isOnline() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
