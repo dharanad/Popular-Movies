@@ -1,7 +1,6 @@
 package com.example.dharan1011.popular_movie_app;
 
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
@@ -11,7 +10,9 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.dharan1011.popular_movie_app.Adapters.MovieReviewAdapter;
 import com.example.dharan1011.popular_movie_app.Adapters.MovieTrailerAdapter;
@@ -23,6 +24,11 @@ import com.example.dharan1011.popular_movie_app.Models.Trailer;
 import com.example.dharan1011.popular_movie_app.Models.TrailerResponse;
 import com.example.dharan1011.popular_movie_app.REST.APIService;
 import com.example.dharan1011.popular_movie_app.databinding.ActivityDetailsBinding;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
@@ -52,12 +58,21 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
     private String movieId;
     private boolean isFavorite;
 
+    //variables for saving movies to firebase functionality
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mDatabaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         getSupportActionBar().setTitle(R.string.title_activity_movie_details);
 
+        //initialize firebase database
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference().child("favoriteMovies");
+
+        searchForTheMovieInTheFirebaseDatabase();
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
         detailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details);
@@ -84,6 +99,33 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
             fetchReviews(movieId);
             fetchTrailers(movieId);
         }
+    }
+
+    private void searchForTheMovieInTheFirebaseDatabase() {
+        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    DataSnapshot child = dataSnapshot.getChildren().iterator().next();
+                    if (movieId.equals(child.getKey().toString())) {
+                        isFavorite = true;
+                        Log.v("myyy", "exists");
+                    }
+                } else {
+                    isFavorite = false;
+                    Log.v("myyy", "doesn't exists");
+                }
+                toggleFavButton();
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setupRecyclerViewUi() {
@@ -201,8 +243,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         Picasso.with(this)
                 .load(APIService.IMAGE_URL + movieInfo.getPoster_path())
                 .into(detailsBinding.imvMovieThumbnail);
-
-        isFavorite = (isMovieAdded(movieInfo.getId())) && isFavourite(movieId);
         toggleFavButton();
     }
 
@@ -212,23 +252,29 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
     * If movies is favorite, then isFav column in the database is toogled
     * */
     public void toggleFavourites(View v) {
-        int val;
-        if (!isFavorite) {
-            //Add to favourite
-            if (!isMovieAdded(movieId)) addMovieToDatabase(movieData);
-            val = 1;
-            isFavorite = true;
-        } else {
-            //Remove from favourite
-            val = 0;
+        if (isFavorite) {
+            mDatabaseReference.child(movieId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot appSnapshot : dataSnapshot.getChildren()) {
+                        appSnapshot.getRef().removeValue();
+                    }
+                    Toast.makeText(DetailsActivity.this, "Favorite data retrieved", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(DetailsActivity.this, "Couldn't fetch the data", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "onCancelled", databaseError.toException());
+                }
+            });
+            Log.v("mmmm", "removed");
             isFavorite = false;
+        } else {
+            mDatabaseReference.child(movieId).push().setValue(movieId);
+            Log.v("mmmm", "added");
+            isFavorite = true;
         }
-        ContentValues c = new ContentValues();
-        c.put(MovieContract.MovieEntry.COLUMN_MOVIE_IS_FAV, val);
-        getContentResolver().update(ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, Long.parseLong(movieId)),
-                c,
-                null,
-                null);
         toggleFavButton();
     }
 
@@ -237,10 +283,11 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
     * if the movie is favorite list it show label to remove it and vise versa
     * */
     private void toggleFavButton() {
-        if (isFavorite)
+        if (isFavorite) {
             detailsBinding.btnFavouriteMovie.setImageResource(R.drawable.fav);
-        else
+        } else {
             detailsBinding.btnFavouriteMovie.setImageResource(R.drawable.unfav);
+        }
     }
 
     /*
@@ -257,32 +304,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         return c != null && c.getCount() != 0 && c.moveToNext() && c.getInt(c.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_IS_FAV)) == 1;
     }
 
-    private boolean isMovieAdded(String id) {
-        Cursor cursor = getContentResolver().query(
-                ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, Long.parseLong(id)),
-                null,
-                null,
-                null,
-                null);
-        return cursor != null && cursor.getCount() == 1;
-    }
-
-    /*
-    * Inserts the current  movie's data from Movie object into the Content Provider
-    * @param Movie object
-    * @return
-    *
-    * */
-    private void addMovieToDatabase(Movie movie) {
-        ContentValues values = new ContentValues();
-        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie.getId());
-        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
-        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, movie.getOverview());
-        values.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, movie.getPoster_path());
-        values.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getRelease_date());
-        values.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, movie.getVote_average());
-        getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, values);
-    }
 
     /*
     * Interface callback
