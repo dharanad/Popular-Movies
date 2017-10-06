@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         android:id="@+id/tv_trailer_site"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
     <TextView
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:id="@+id/tv_trailer_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <View
-        android:background="@android:color/black"
         android:layout_width="match_parent"
-        android:layout_marginStart="2dp"
+        android:layout_height="1dp"
         android:layout_marginEnd="2dp"
-        android:layout_height="1dp" />
+        android:layout_marginStart="2dp"
+        android:background="@android:color/black" />
 </LinearLayout>

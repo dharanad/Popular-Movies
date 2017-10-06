@@ -23,7 +23,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DetailsActivity" />
+            android:name=".DetailsActivity"
+            android:parentActivityName=".MainActivity" />
 
         <provider
             android:name=".Data.MovieContentProvider"

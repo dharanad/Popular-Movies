@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.dharan1011.popular_movie_app.Models.Review;
 import com.example.dharan1011.popular_movie_app.R;
+import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,17 +50,18 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
 
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
-        TextView authorTextView, contentTextView;
+        TextView authorTextView;
+        ExpandableTextView expTv1;
 
         public ReviewViewHolder(View itemView) {
             super(itemView);
             authorTextView = (TextView) itemView.findViewById(R.id.tv_review_author);
-            contentTextView = (TextView) itemView.findViewById(R.id.tv_review_content);
+            expTv1 = (ExpandableTextView) itemView.findViewById(R.id.expand_text_view);
         }
 
         public void bind(String author, String content) {
             authorTextView.setText(author);
-            contentTextView.setText(content);
+            expTv1.setText(content);
         }
     }
 }

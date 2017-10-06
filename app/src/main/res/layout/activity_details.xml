@@ -4,7 +4,8 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/background">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,12 +58,13 @@
                         android:layout_marginTop="16dp"
                         android:textStyle="bold" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/btn_favourite_movie"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:layout_marginTop="16dp"
                         android:onClick="toggleFavourites"
+                        android:src="@drawable/unfav"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
                 </LinearLayout>
             </LinearLayout>
@@ -101,8 +103,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
-                android:padding="4dp"
-                android:background="@drawable/container_background">
+                android:background="@drawable/container_background"
+                android:padding="4dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rcv_trailers_list"
@@ -143,8 +145,8 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
-                android:padding="4dp"
-                android:background="@drawable/container_background">
+                android:background="@drawable/container_background"
+                android:padding="4dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rcv_reviews_list"

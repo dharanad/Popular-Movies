@@ -37,22 +37,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailsActivity extends AppCompatActivity implements MovieTrailerAdapter.ItemClickListener {
 
-    private static final String TAG = DetailsActivity.class.getSimpleName();
-    private static final String EXTRA_OBJECT = "movie-object";
     public static final String TRAILERS_STATE_KEY = "trailers-key";
     public static final String REVIEWS_STATE_KEY = "review-key";
-    private Movie movieData;
-    private String movieId;
-    private boolean isFavorite;
+    private static final String TAG = DetailsActivity.class.getSimpleName();
+    private static final String EXTRA_OBJECT = "movie-object";
     Vibrator vibrator;
-
     List<Review> reviewList;
     List<Trailer> trailerList;
-
     ActivityDetailsBinding detailsBinding;
     MovieReviewAdapter movieReviewAdapter;
     MovieTrailerAdapter movieTrailerAdapter;
     RecyclerView reviewsRecyclerView, trailersRecyclerView;
+    private Movie movieData;
+    private String movieId;
+    private boolean isFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,9 +240,9 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
     * */
     private void toggleFavButton() {
         if (isFavorite)
-            detailsBinding.btnFavouriteMovie.setText(getString(R.string.remove_favorite_label));
+            detailsBinding.btnFavouriteMovie.setImageResource(R.drawable.fav);
         else
-            detailsBinding.btnFavouriteMovie.setText(R.string.add_favourite_label);
+            detailsBinding.btnFavouriteMovie.setImageResource(R.drawable.unfav);
     }
 
     /*
