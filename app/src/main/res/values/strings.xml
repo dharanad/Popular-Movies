@@ -30,8 +30,6 @@
     <string name="button_already_registered">Do you have an account? Login</string>
     <string name="button_sign_up">Sign Up</string>
 
-    <string name="error_enter_your_name">Enter your name</string>
-    <string name="error_enter_your_city">Enter your city</string>
     <string name="error_enter_valid_email">Enter a valid email</string>
     <string name="error_password_less_than_six_character_long">Password must be at least 6 characters long</string>
     <string name="check_internet_connectivity">Check internet connectivity</string>
@@ -48,5 +46,14 @@
     <string name="reset_password_heading">Send reset password instruction</string>
     <string name="button_sign_not_registered">Sign me up instead</string>
     <string name="email_hint">E-mail address</string>
+
+    <string name="heading_forgot_password">Forgot password?</string>
+    <string name="sub_haeding_forgot_password">Give us your email, we\'ll reset that up</string>
+    <string name="error_enter_your_name">Enter your name</string>
+    <string name="error_enter_your_city">Enter your city</string>
+    <string name="button_reset_password">Reset Password</string>
+
     <string name="toast_authentication_failed">Authentication failed. Please check your email or passowrd</string>
+    <string name="toast_password_reset_instruction_sent">Password reset instructions sent to your registered email</string>
+    <string name="error_email_not_registered">Please check your email. Looks like you\'re not registered with us</string>
 </resources>
