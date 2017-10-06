@@ -22,6 +22,7 @@ import com.example.dharan1011.popular_movie_app.Adapters.MoviesAdapter;
 import com.example.dharan1011.popular_movie_app.Models.Movie;
 import com.example.dharan1011.popular_movie_app.Models.MovieResponse;
 import com.example.dharan1011.popular_movie_app.REST.APIService;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.parceler.Parcels;
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
     private static final String SHARED_PREFERENCE_KEY = "shared_preference_key";
     private static final String TOP_RATED = "top_rated";
     private static final String POPULAR = "popular";
-
+    FirebaseAuth mAuth;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
     private MoviesAdapter mMoviesAdapter;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
         setContentView(R.layout.activity_main);
         mProgressBar = (ProgressBar) findViewById(R.id.pb_loading);
 
+        //initialize firebaseAuth
+        mAuth = FirebaseAuth.getInstance();
         //setup recycler view
         mRecyclerView = (RecyclerView) findViewById(R.id.rcv_movie_list);
         mRecyclerView.setHasFixedSize(true);
@@ -221,9 +224,19 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
             case R.id.action_favourite_movies:
                 startActivity(new Intent(this, FavouriteMoviesActivity.class));
                 return true;
+            case R.id.action_sign_out:
+                signOut();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void signOut() {
+        mAuth.signOut();
+        Intent signoutIntent = new Intent(this, LoginActivity.class);
+        startActivity(signoutIntent);
+        finish();
     }
 
 }
