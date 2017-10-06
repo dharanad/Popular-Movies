@@ -25,19 +25,12 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemViewHolder> {
     private final static String TAG = MoviesAdapter.class.getSimpleName();
-
-    public interface ItemClickHandler {
-        void onItemClick(Movie movie);
-    }
-
     private List<Movie> mMovieList;
     private ItemClickHandler itemClickHandler;
-
     public MoviesAdapter(ItemClickHandler itemClickHandler) {
         this.itemClickHandler = itemClickHandler;
         mMovieList = new ArrayList<Movie>();
     }
-
 
     @Override
     public MovieItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -64,6 +57,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemV
         notifyDataSetChanged();
     }
 
+    public interface ItemClickHandler {
+        void onItemClick(Movie movie);
+    }
+
     public class MovieItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView movieItemImageView;
 
@@ -76,7 +73,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemV
         void bind(Movie movie) {
             Picasso.with(itemView.getContext())
                     .load(APIService.IMAGE_URL+movie.getPoster_path())
-                    .placeholder(R.drawable.ic_place_holder)
+                    .placeholder(R.drawable.placeholdercinema)
                     .into(movieItemImageView);
         }
 

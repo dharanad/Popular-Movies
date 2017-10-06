@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FavouriteMoviesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, MoviesAdapter.ItemClickHandler {
+    public static final int LOADER_ID = 3000;
+    public static final String TAG = FavouriteMoviesActivity.class.getSimpleName();
     private static final String EXTRA_OBJECT = "movie-object";
     private static final String MOVIES_STATE_KEY = "movies_list";
     RecyclerView recyclerView;
     MoviesAdapter mMoviesAdapter;
-    public static final int LOADER_ID = 3000;
-    public static final String TAG = FavouriteMoviesActivity.class.getSimpleName();
     List<Movie> mMovieList;
 
     @Override

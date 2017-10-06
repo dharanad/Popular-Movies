@@ -19,14 +19,9 @@ import java.util.List;
 
 public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapter.TrailerViewHolder> {
 
-    public interface ItemClickListener {
-        void onItemClick(String key);
-    }
-
     private ItemClickListener itemClickListener;
     private Context context;
     private List<Trailer> trailerList;
-
     public MovieTrailerAdapter(Context context) {
         this.context = context;
         itemClickListener = (ItemClickListener) context;
@@ -53,6 +48,10 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
     @Override
     public int getItemCount() {
         return (trailerList != null)?trailerList.size():0;
+    }
+
+    public interface ItemClickListener {
+        void onItemClick(String key);
     }
 
     public class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

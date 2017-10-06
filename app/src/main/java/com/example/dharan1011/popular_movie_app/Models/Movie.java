@@ -1,9 +1,6 @@
 package com.example.dharan1011.popular_movie_app.Models;
 
 
-import android.os.Parcelable;
-
-import com.example.dharan1011.popular_movie_app.Utils.APIService;
 import com.google.gson.annotations.SerializedName;
 
 import org.parceler.Parcel;
@@ -31,45 +28,44 @@ public class Movie implements Serializable {
 
     public String getPoster_path() {return poster_path;}
 
+    public void setPoster_path(String poster_path) {
+        this.poster_path = poster_path;
+    }
 
     public String getOverview() {
         return overview;
-    }
-
-    public String getRelease_date() {
-        return "Release Date : " + release_date;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getVote_average() {
-        return "Rating : " + vote_average + "/10";
-    }
-
-    public void setPoster_path(String poster_path) {
-        this.poster_path = poster_path;
     }
 
     public void setOverview(String overview) {
         this.overview = overview;
     }
 
+    public String getRelease_date() {
+        return "Release Date : " + release_date;
+    }
+
     public void setRelease_date(String release_date) {
         this.release_date = release_date;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getVote_average() {
+        return "Rating : " + vote_average + "/10";
     }
 
     public void setVote_average(String vote_average) {
