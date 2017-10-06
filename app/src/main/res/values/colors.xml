@@ -6,6 +6,4 @@
     <color name="colorPrimary">#ffa215</color>
     <color name="colorPrimaryDark">#c67300</color>
     <color name="colorAccent">#FF5252</color>
-    <color name="entry_text_color">#2E427C</color>
-    <color name="button_text_color">#2996AA</color>
 </resources>
