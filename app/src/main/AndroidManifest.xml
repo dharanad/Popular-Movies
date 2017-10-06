@@ -31,7 +31,9 @@
             android:authorities="@string/content_authority"
             android:exported="false" />
 
-        <activity android:name=".FavouriteMoviesActivity"></activity>
+        <activity android:name=".FavouriteMoviesActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>
