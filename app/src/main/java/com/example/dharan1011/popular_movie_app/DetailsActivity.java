@@ -1,8 +1,6 @@
 package com.example.dharan1011.popular_movie_app;
 
-import android.content.ContentUris;
 import android.content.Intent;
-import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,7 +14,6 @@ import android.widget.Toast;
 
 import com.example.dharan1011.popular_movie_app.Adapters.MovieReviewAdapter;
 import com.example.dharan1011.popular_movie_app.Adapters.MovieTrailerAdapter;
-import com.example.dharan1011.popular_movie_app.Data.MovieContract;
 import com.example.dharan1011.popular_movie_app.Models.Movie;
 import com.example.dharan1011.popular_movie_app.Models.Review;
 import com.example.dharan1011.popular_movie_app.Models.ReviewResponse;
@@ -107,19 +104,19 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    DataSnapshot child = dataSnapshot.getChildren().iterator().next();
-                    if (movieId.equals(child.getKey().toString())) {
-                        isFavorite = true;
-                        Log.v("myyy", "exists");
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if (movieId.equals(child.getKey().toString())) {
+                            isFavorite = true;
+
+                            break;
+
+                        } else {
+                            isFavorite = false;
+                        }
                     }
-                } else {
-                    isFavorite = false;
-                    Log.v("myyy", "doesn't exists");
                 }
                 toggleFavButton();
-
             }
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -259,7 +256,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
                     for (DataSnapshot appSnapshot : dataSnapshot.getChildren()) {
                         appSnapshot.getRef().removeValue();
                     }
-                    Toast.makeText(DetailsActivity.this, "Favorite data retrieved", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -268,11 +264,9 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
                     Log.e(TAG, "onCancelled", databaseError.toException());
                 }
             });
-            Log.v("mmmm", "removed");
             isFavorite = false;
         } else {
             mDatabaseReference.child(movieId).push().setValue(movieId);
-            Log.v("mmmm", "added");
             isFavorite = true;
         }
         toggleFavButton();
@@ -288,20 +282,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         } else {
             detailsBinding.btnFavouriteMovie.setImageResource(R.drawable.unfav);
         }
-    }
-
-    /*
-    *check whether the movie corresponding to id is in favourite movies database or not
-    *@param movie id
-    * @return boolean
-     */
-    private boolean isFavourite(String id) {
-        Cursor c = getContentResolver().query(
-                ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, Long.parseLong(id)),
-                null,
-                null,
-                null, null);
-        return c != null && c.getCount() != 0 && c.moveToNext() && c.getInt(c.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_IS_FAV)) == 1;
     }
 
 
