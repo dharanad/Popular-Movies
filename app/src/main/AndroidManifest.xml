@@ -15,7 +15,13 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".DetailsActivity"
             android:parentActivityName=".MainActivity" />
@@ -25,16 +31,7 @@
             android:authorities="@string/content_authority"
             android:exported="false" />
 
-        <activity android:name=".FavouriteMoviesActivity" />
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".ResetPasswordActivity"></activity>
+        <activity android:name=".FavouriteMoviesActivity"></activity>
     </application>
 
 </manifest>
