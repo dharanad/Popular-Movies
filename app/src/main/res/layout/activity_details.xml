@@ -63,7 +63,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_marginTop="16dp"
-                        android:onClick="toggleFavourites"
+                        android:onClick="toggleFavButtonToFakeTheFavUnfavEffect"
                         android:src="@drawable/unfav"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
                 </LinearLayout>

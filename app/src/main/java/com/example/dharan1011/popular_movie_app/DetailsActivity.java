@@ -64,6 +64,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         getSupportActionBar().setTitle(R.string.title_activity_movie_details);
+        Log.v("mmmmm", "onCreate called");
 
         //initialize firebase database
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -107,7 +108,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         if (movieId.equals(child.getKey().toString())) {
                             isFavorite = true;
-
                             break;
 
                         } else {
@@ -248,8 +248,8 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
     * If movie is not favourite and movie is added to database and its isFav column is toogled to 1
     * If movies is favorite, then isFav column in the database is toogled
     * */
-    public void toggleFavourites(View v) {
-        if (isFavorite) {
+    public void toggleFavourites() {
+        if (!isFavorite) {
             mDatabaseReference.child(movieId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -264,14 +264,31 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
                     Log.e(TAG, "onCancelled", databaseError.toException());
                 }
             });
-            isFavorite = false;
         } else {
             mDatabaseReference.child(movieId).push().setValue(movieId);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        toggleFavourites();
+    }
+
+    @Override
+    protected void onResume() {
+        searchForTheMovieInTheFirebaseDatabase();
+        super.onResume();
+    }
+
+    public void toggleFavButtonToFakeTheFavUnfavEffect(View v) {
+        if (isFavorite) {
+            isFavorite = false;
+        } else {
             isFavorite = true;
         }
         toggleFavButton();
     }
-
     /*
     * Toogle the favourite button text label
     * if the movie is favorite list it show label to remove it and vise versa
