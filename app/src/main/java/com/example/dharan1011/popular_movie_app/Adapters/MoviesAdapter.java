@@ -54,6 +54,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemV
 
     public void setmMovieList(List<Movie> mMovieList) {
         this.mMovieList = mMovieList;
+//        Log.v("mmmm", "setmMovieList called");
+//        Log.v("mmmm", "mMovieList size is: "+mMovieList.size());
         notifyDataSetChanged();
     }
 
@@ -71,6 +73,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieItemV
         }
 
         void bind(Movie movie) {
+//            Log.v("mmmm", "poster path is: "+movie.getPoster_path());
             Picasso.with(itemView.getContext())
                     .load(APIService.IMAGE_URL+movie.getPoster_path())
                     .placeholder(R.drawable.placeholdercinema)
