@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -111,9 +112,18 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
     * Checks whether device is connected to internet or not
     * */
     public boolean isOnline() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
+        Runtime runtime=Runtime.getRuntime();
+        try{
+            Process ipProcess=runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue=ipProcess.waitFor();
+            return (exitValue==0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void showProgressBar() {
