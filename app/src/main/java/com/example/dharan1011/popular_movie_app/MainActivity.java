@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Ite
 
         //initialize firebaseAuth
         mAuth = FirebaseAuth.getInstance();
+
         //setup recycler view
         mRecyclerView = (RecyclerView) findViewById(R.id.rcv_movie_list);
         mRecyclerView.setHasFixedSize(true);
