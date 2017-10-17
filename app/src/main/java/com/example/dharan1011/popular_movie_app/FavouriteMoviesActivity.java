@@ -2,28 +2,26 @@ package com.example.dharan1011.popular_movie_app;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.dharan1011.popular_movie_app.Adapters.MoviesAdapter;
-import com.example.dharan1011.popular_movie_app.Data.MovieContract;
 import com.example.dharan1011.popular_movie_app.Models.Movie;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavouriteMoviesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, MoviesAdapter.ItemClickHandler {
-    public static final int LOADER_ID = 3000;
+public class FavouriteMoviesActivity extends AppCompatActivity implements MoviesAdapter.ItemClickHandler {
     public static final String TAG = FavouriteMoviesActivity.class.getSimpleName();
     private static final String EXTRA_OBJECT = "movie-object";
     private static final String MOVIES_STATE_KEY = "movies_list";
@@ -31,12 +29,19 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
     MoviesAdapter mMoviesAdapter;
     List<Movie> mMovieList;
 
+    //variables for retrieving movies to firebase functionality
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mDatabaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite_movies);
         getSupportActionBar().setTitle(getString(R.string.title_activity_favourite_movies));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //initialize firebase database
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference().child("favoriteMovies");
 
         recyclerView = (RecyclerView) findViewById(R.id.rcv_favourite_movies_list);
         recyclerView.setHasFixedSize(true);
@@ -52,14 +57,30 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
         if (savedInstanceState != null) {
             mMovieList = Parcels.unwrap(savedInstanceState.getParcelable(MOVIES_STATE_KEY));
             mMoviesAdapter.setmMovieList(mMovieList);
-        } else {
+        } else mMovieList = new ArrayList<>();
+        searchForFavoritedMoviesInTheFirebaseDatabase();
+    }
 
-            if (getSupportLoaderManager().getLoader(LOADER_ID) == null)
-                getSupportLoaderManager().initLoader(LOADER_ID, null, this);
-            else
-                getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
-        }
+    private void searchForFavoritedMoviesInTheFirebaseDatabase() {
+        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        String id = child.getKey().toString();
+                        String poster_path = child.child("posterPath").getValue().toString();
+                        Movie movie = new Movie(id, poster_path);
+                        mMovieList.add(movie);
+                    }
+                }
+                mMoviesAdapter.setmMovieList(mMovieList);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     //Persist movieList
@@ -73,51 +94,6 @@ public class FavouriteMoviesActivity extends AppCompatActivity implements Loader
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) onBackPressed();
         return super.onOptionsItemSelected(item);
-    }
-
-    // Fetch favourite movies from database
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this,
-                MovieContract.MovieEntry.CONTENT_URI,
-                null,
-                MovieContract.MovieEntry.COLUMN_MOVIE_IS_FAV + "=?",
-                new String[]{"1"},
-                null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mMovieList = parseCursor(data);
-        mMoviesAdapter.setmMovieList(mMovieList);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mMoviesAdapter.setmMovieList(null);
-    }
-
-    /*
-    * Creates a list of movies object from cursor object
-    * @params Movie object
-    * @return List<Movie>
-    * */
-    private List<Movie> parseCursor(Cursor cursor) {
-        if (cursor == null) return null;
-        List<Movie> movieList = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            Movie movie = new Movie();
-            Log.d(TAG, "parseCursor: " + cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE)));
-            movie.setId(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID)));
-            movie.setTitle(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE)));
-            movie.setOverview(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW)));
-            movie.setPoster_path(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH)));
-            movie.setRelease_date(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE)));
-            movie.setVote_average(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE)));
-
-            movieList.add(movie);
-        }
-        return movieList;
     }
 
     /*

@@ -54,6 +54,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
     private Movie movieData;
     private String movieId;
     private boolean isFavorite;
+    private String moviePosterUrl;
 
     //variables for saving movies to firebase functionality
     private FirebaseDatabase mFirebaseDatabase;
@@ -64,11 +65,11 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         getSupportActionBar().setTitle(R.string.title_activity_movie_details);
-        Log.v("mmmmm", "onCreate called");
 
         //initialize firebase database
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("favoriteMovies");
+
 
         searchForTheMovieInTheFirebaseDatabase();
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -81,6 +82,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
         if (getIntent().getExtras() != null) {
             movieData = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_OBJECT));
             movieId = movieData.getId();
+            moviePosterUrl = movieData.getPoster_path();
         }
         updateUi(movieData);
         /*
@@ -266,6 +268,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieTrailerAd
             });
         } else {
             mDatabaseReference.child(movieId).push().setValue(movieId);
+            mDatabaseReference.child(movieId).child("posterPath").setValue(moviePosterUrl);
         }
     }
 

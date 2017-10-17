@@ -25,6 +25,13 @@ public class Movie implements Serializable {
     @SerializedName("vote_average")
     public String vote_average;
 
+    public Movie(String movieId, String path) {
+        id = movieId;
+        poster_path = path;
+    }
+
+    public Movie() {
+    }
 
     public String getPoster_path() {return poster_path;}
 

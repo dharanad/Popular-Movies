@@ -20,11 +20,6 @@
             android:name=".DetailsActivity"
             android:parentActivityName=".MainActivity" />
 
-        <provider
-            android:name=".Data.MovieContentProvider"
-            android:authorities="@string/content_authority"
-            android:exported="false" />
-
         <activity android:name=".FavouriteMoviesActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity">
@@ -34,7 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ResetPasswordActivity"></activity>
+        <activity android:name=".ResetPasswordActivity" />
     </application>
 
 </manifest>
